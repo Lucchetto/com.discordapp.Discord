@@ -8,9 +8,14 @@ socat_pid=$!
 
 FLAGS='--enable-gpu-rasterization --enable-zero-copy --enable-gpu-compositing --enable-native-gpu-memory-buffers --enable-oop-rasterization --enable-features=UseSkiaRenderer'
 
-if [[ $XDG_SESSION_TYPE == "wayland" ]] && [ -c /dev/nvidia0 ]
+if [[ $XDG_SESSION_TYPE == "wayland" ]]
 then
-    FLAGS="$FLAGS --disable-gpu-sandbox"
+    FLAGS="$FLAGS --enable-features=UseOzonePlatform --ozone-platform=wayland"
+
+    if [ -c /dev/nvidia0 ]
+    then
+        FLAGS="$FLAGS --disable-gpu-sandbox"
+    fi
 fi
 
 disable-breaking-updates.py
